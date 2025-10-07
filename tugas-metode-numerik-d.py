@@ -2,9 +2,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Define the system of equations
-# f1(x,y) = x² + xy - 10 = 0
-# f2(x,y) = y + 3xy² - 57 = 0
 
 def f1(x, y):
     return x**2 + x*y - 10
@@ -12,7 +9,6 @@ def f1(x, y):
 def f2(x, y):
     return y + 3*x*y**2 - 57
 
-# Partial derivatives for Newton-Raphson
 def f1_x(x, y):
     return 2*x + y
 
@@ -25,7 +21,6 @@ def f2_x(x, y):
 def f2_y(x, y):
     return 1 + 6*x*y
 
-# Jacobian Matrix
 def jacobian(x, y):
     J = np.array([
         [f1_x(x, y), f1_y(x, y)],
@@ -33,7 +28,6 @@ def jacobian(x, y):
     ])
     return J
 
-# Iteration functions for Jacobi Method
 def g1A_jacobi(x, y):
     """g1A: x = sqrt(10 - xy)"""
     return np.sqrt(max(10 - x*y, 0))
@@ -44,7 +38,7 @@ def g2B_jacobi(x, y):
         return np.sqrt((57 - y) / (3*x))
     return y
 
-# Iteration functions for Gauss-Seidel Method
+
 def g1A_seidel(x, y):
     """g1A: x = sqrt(10 - xy)"""
     return np.sqrt(max(10 - x*y, 0))
@@ -55,7 +49,7 @@ def g2B_seidel(x_new, y):
         return np.sqrt((57 - y) / (3*x_new))
     return y
 
-# Jacobi Method
+
 def jacobi_method(x0, y0, epsilon, max_iter=100):
     x, y = x0, y0
     iterations = []
@@ -97,14 +91,14 @@ def jacobi_method(x0, y0, epsilon, max_iter=100):
     
     return x, y, iterations
 
-# Gauss-Seidel Method
+
 def gauss_seidel_method(x0, y0, epsilon, max_iter=100):
     x, y = x0, y0
     iterations = []
     
     for k in range(max_iter):
         x_new = g1A_seidel(x, y)
-        y_new = g2B_seidel(x_new, y)  # Use x_new here
+        y_new = g2B_seidel(x_new, y)  
         
         iterations.append({
             'k': k,
@@ -139,7 +133,6 @@ def gauss_seidel_method(x0, y0, epsilon, max_iter=100):
     
     return x, y, iterations
 
-# Newton-Raphson Method for System
 def newton_raphson_method(x0, y0, epsilon, max_iter=100):
     x, y = x0, y0
     iterations = []
@@ -189,7 +182,6 @@ def newton_raphson_method(x0, y0, epsilon, max_iter=100):
     
     return x, y, iterations
 
-# Secant Method for System
 def secant_method(x0, y0, epsilon, max_iter=100, h=0.01):
     x_prev, y_prev = x0, y0
     x, y = x0 + h, y0 + h
@@ -199,14 +191,12 @@ def secant_method(x0, y0, epsilon, max_iter=100, h=0.01):
         F_curr = np.array([f1(x, y), f2(x, y)])
         F_prev = np.array([f1(x_prev, y_prev), f2(x_prev, y_prev)])
         
-        # Approximate Jacobian using secant method
         delta_x = x - x_prev
         delta_y = y - y_prev
         
         if abs(delta_x) < 1e-10 or abs(delta_y) < 1e-10:
             break
         
-        # Use forward differences to approximate Jacobian
         J_approx = np.array([
             [(f1(x + h, y) - f1(x, y)) / h, (f1(x, y + h) - f1(x, y)) / h],
             [(f2(x + h, y) - f2(x, y)) / h, (f2(x, y + h) - f2(x, y)) / h]
@@ -254,7 +244,6 @@ def secant_method(x0, y0, epsilon, max_iter=100, h=0.01):
     
     return x, y, iterations
 
-# Initial parameters
 x0 = 1.5
 y0 = 3.5
 epsilon = 0.000001
@@ -268,7 +257,6 @@ print(f"\nNilai awal: x₀ = {x0}, y₀ = {y0}")
 print(f"Toleransi (ε) = {epsilon}")
 print("="*90)
 
-# Solve using Jacobi method
 print("\n\n" + "="*90)
 print("METODE 1: JACOBI (g1A dan g2B)")
 print("="*90)
@@ -285,7 +273,6 @@ print(f"f₁(x, y) = {f1(x_jacobi, y_jacobi):.10e}")
 print(f"f₂(x, y) = {f2(x_jacobi, y_jacobi):.10e}")
 print(f"Jumlah iterasi: {len(iter_jacobi) - 1}")
 
-# Solve using Gauss-Seidel method
 print("\n\n" + "="*90)
 print("METODE 2: GAUSS-SEIDEL (g1A dan g2B)")
 print("="*90)
@@ -302,7 +289,6 @@ print(f"f₁(x, y) = {f1(x_seidel, y_seidel):.10e}")
 print(f"f₂(x, y) = {f2(x_seidel, y_seidel):.10e}")
 print(f"Jumlah iterasi: {len(iter_seidel) - 1}")
 
-# Solve using Newton-Raphson method
 print("\n\n" + "="*90)
 print("METODE 3: NEWTON-RAPHSON")
 print("="*90)
@@ -319,7 +305,6 @@ print(f"f₁(x, y) = {f1(x_nr, y_nr):.10e}")
 print(f"f₂(x, y) = {f2(x_nr, y_nr):.10e}")
 print(f"Jumlah iterasi: {len(iter_nr) - 1}")
 
-# Solve using Secant method
 print("\n\n" + "="*90)
 print("METODE 4: SECANT")
 print("="*90)
@@ -336,7 +321,6 @@ print(f"f₁(x, y) = {f1(x_sec, y_sec):.10e}")
 print(f"f₂(x, y) = {f2(x_sec, y_sec):.10e}")
 print(f"Jumlah iterasi: {len(iter_sec) - 1}")
 
-# Comparison
 print("\n\n" + "="*90)
 print("PERBANDINGAN KEEMPAT METODE")
 print("="*90)
@@ -347,10 +331,8 @@ print(f"{'Gauss-Seidel':<20} {x_seidel:<20.10f} {y_seidel:<20.10f} {len(iter_sei
 print(f"{'Newton-Raphson':<20} {x_nr:<20.10f} {y_nr:<20.10f} {len(iter_nr)-1:<15}")
 print(f"{'Secant':<20} {x_sec:<20.10f} {y_sec:<20.10f} {len(iter_sec)-1:<15}")
 
-# Visualization
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
 
-# Plot 1: Error convergence comparison
 ax1 = axes[0, 0]
 if len(iter_jacobi) > 1:
     iter_nums_jacobi = [d['k'] for d in iter_jacobi[:-1]]
@@ -379,7 +361,6 @@ ax1.set_title('Konvergensi Error - Semua Metode', fontsize=12, fontweight='bold'
 ax1.grid(True, alpha=0.3)
 ax1.legend()
 
-# Plot 2: Solution path - Jacobi & Gauss-Seidel
 ax2 = axes[0, 1]
 x_jacobi_path = [d['x'] for d in iter_jacobi]
 y_jacobi_path = [d['y'] for d in iter_jacobi]
@@ -398,7 +379,6 @@ ax2.set_title('Lintasan Solusi - Jacobi & Gauss-Seidel', fontsize=12, fontweight
 ax2.grid(True, alpha=0.3)
 ax2.legend()
 
-# Plot 3: Solution path - Newton-Raphson & Secant
 ax3 = axes[1, 0]
 x_nr_path = [d['x'] for d in iter_nr]
 y_nr_path = [d['y'] for d in iter_nr]
@@ -417,7 +397,6 @@ ax3.set_title('Lintasan Solusi - Newton-Raphson & Secant', fontsize=12, fontweig
 ax3.grid(True, alpha=0.3)
 ax3.legend()
 
-# Plot 4: Comparison summary
 ax4 = axes[1, 1]
 methods = ['Jacobi', 'Gauss-Seidel', 'Newton-Raphson', 'Secant']
 iterations = [len(iter_jacobi)-1, len(iter_seidel)-1, len(iter_nr)-1, len(iter_sec)-1]
@@ -428,7 +407,6 @@ ax4.set_ylabel('Jumlah Iterasi', fontsize=11)
 ax4.set_title('Perbandingan Jumlah Iterasi', fontsize=12, fontweight='bold')
 ax4.grid(True, alpha=0.3, axis='y')
 
-# Add value labels on bars
 for bar, iter_count in zip(bars, iterations):
     height = bar.get_height()
     ax4.text(bar.get_x() + bar.get_width()/2., height,
@@ -439,3 +417,4 @@ plt.tight_layout()
 plt.savefig('nonlinear_system_comparison.png', dpi=300, bbox_inches='tight')
 plt.show()
 
+print("\n\nGrafik telah disimpan sebagai 'nonlinear_system_comparison.png'")
